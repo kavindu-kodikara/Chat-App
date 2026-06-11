@@ -1,14 +1,18 @@
 import Octicons from '@expo/vector-icons/Octicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 export default function Home() {
 
     const [chatData,setChatData] = useState();
     const [isRefresh,setIsRefresh] = useState(false);
     const [userName,setUserName] = useState("");
     const [userMobile,setUserMobile] = useState("");
+
+    const router = useRouter();
 
     async function loadChats(mobile :string) {
 
@@ -90,7 +94,9 @@ export default function Home() {
                 data={chatData}
                 renderItem={({ item }) => {
                     return (
-                        <Pressable style={styles.chatView}>
+                        <Pressable style={styles.chatView} onPress={()=>{
+                            router.push("/chat");
+                        }}>
                             <Image
                                 source={{ uri: "https://cdn-icons-png.flaticon.com/512/4140/4140073.png" }}
                                 style={styles.profilePic}
