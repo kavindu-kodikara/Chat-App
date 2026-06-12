@@ -1,50 +1,98 @@
-# Welcome to your Expo app 👋
+﻿# Chat App Practical Project
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This repository contains the Expo React Native frontend for the Chat App practical project created for the HDP 1 subject at Java Institute for Advanced Technology.
 
-## Get started
+It is intended as a reference for BSc Hons Software Engineering second-year students. If you miss a class or practical coding session, you can review the daily commit history by lecture day (for example: `Day - 28`, `Day - 29`).
 
-1. Install dependencies
+## About this project
 
-   ```bash
-   npm install
-   ```
+- Platform: Expo React Native
+- Purpose: Chat App frontend for practical class work
+- Audience: BSc Hons Software Engineering 2nd year students
+- Institute: Java Institute for Advanced Technology
+- Website: <https://www.javainstitute.edu.lk/>
 
-2. Start the app
+## How to use this repository
 
-   ```bash
-   npx expo start
-   ```
+### Clone the repository
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+If you have Git installed, use:
 
 ```bash
-npm run reset-project
+git clone <repository-url>
+cd Chat-App
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Replace `<repository-url>` with the repository URL provided by your lecturer or hosting platform.
 
-## Learn more
+### Download as ZIP
 
-To learn more about developing your project with Expo, look at the following resources:
+If you do not want to use Git, download the project as a ZIP from the repository hosting website, extract it, then open the extracted folder in your terminal.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Find the day you missed
 
-## Join the community
+Each commit is labeled with the lecture day, for example:
 
-Join our community of developers creating universal apps.
+- `Day - 28`
+- `Day - 29`
+- `Day - 30`
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Use commit history or the hosting platform’s history view to locate the code for the lecture day you missed.
+
+## Setup and run
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the Expo development server:
+
+```bash
+npx expo start
+```
+
+Then choose one of these options:
+
+- Open on Android emulator
+- Open on iOS simulator
+- Open in Expo Go on a physical device
+
+## Project structure
+
+- `app/` — main application screens and route-based pages
+- `components/` — reusable UI components
+- `constants/` — theme and shared constants
+- `hooks/` — custom React hooks
+- `assets/` — images and asset files
+- `scripts/` — helper scripts
+- `package.json` — project scripts and dependencies
+
+## Useful commands
+
+- `npm install` — install dependencies
+- `npx expo start` — start Expo development server
+- `npm run android` — run on Android emulator/device
+- `npm run ios` — run on iOS simulator
+- `npm run web` — run web version
+- `npm run lint` — lint the project
+
+## Student instructions
+
+If you miss practical code in class:
+
+1. Check the daily commit messages, which are named by lecture day.
+2. Open the commit history in Git or on the repository hosting platform.
+3. Review the specific day’s code changes.
+4. Run `npm install` and `npx expo start` to test the project locally.
+
+## Lecturer notes
+
+- Keep commit messages consistent with the day labels.
+- Encourage students to use this repo as a reference only after trying the tasks themselves.
+- Use daily commit history to help students catch up quickly.
+
+---
+
+For more information about Java Institute for Advanced Technology, visit <https://www.javainstitute.edu.lk/>.
