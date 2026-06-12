@@ -95,7 +95,15 @@ export default function Home() {
                 renderItem={({ item }) => {
                     return (
                         <Pressable style={styles.chatView} onPress={()=>{
-                            router.push("/chat");
+                            router.push({
+                                pathname:"/chat",
+                                params: { 
+                                    chatId : item.last_message.chat_chat_id,
+                                    userName : item.user.fname +" "+ item.user.lname,
+                                    userMobile : item.user.mobile
+
+                                 }
+                            });
                         }}>
                             <Image
                                 source={{ uri: "https://cdn-icons-png.flaticon.com/512/4140/4140073.png" }}

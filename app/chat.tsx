@@ -1,13 +1,60 @@
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import { useRouter } from 'expo-router';
-import { Image, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { FlatList, Image, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Chat() {
 
+    const [chatHistory, setChatHistory] = useState();
+    const [userName, setUserName] = useState("");
+
     const router = useRouter();
+    const params = useLocalSearchParams();
+    const chatId = params.chatId;
+    const userMobile = params.userMobile;
+    
+
+    useEffect(() => {
+
+        setUserName(params.userName+"");
+
+        loadChatHistory();
+
+    }, []);
+
+    async function loadChatHistory() {
+
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+        const response = await fetch(apiUrl + "/chat-history/get-chat-history?id=" + chatId);
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            setChatHistory(data);
+
+        } else {
+            console.log(response.status + "  : " + data.msg);
+            alert("Something went wrong");
+        }
+
+    }
+
+    function timeFormat(time :string){
+
+        const formattedTime = new Date(time).toLocaleTimeString("en-US",{
+            hour:"numeric",
+            minute:"2-digit",
+            hour12:true,
+        });
+
+        return formattedTime;
+
+    }
 
     return (
 
@@ -19,15 +66,15 @@ export default function Chat() {
             <SafeAreaView style={styles.container}>
 
                 <View style={styles.headerView}>
-                    <Entypo name="chevron-left" size={24} color="black" onPress={()=>{
+                    <Entypo name="chevron-left" size={24} color="black" onPress={() => {
                         router.back();
-                    }}/>
+                    }} />
                     <Image
                         source={{ uri: "https://cdn-icons-png.flaticon.com/512/4140/4140073.png" }}
                         style={styles.profilePic}
                     />
                     <View style={{ flex: 1, gap: 3 }}>
-                        <Text style={styles.nameTxt}>Fname Lname</Text>
+                        <Text style={styles.nameTxt}>{userName}</Text>
                         <View style={styles.statusView}>
                             <View style={styles.statusBall} />
                             <Text style={styles.statusTxt}>Online</Text>
@@ -38,15 +85,23 @@ export default function Chat() {
 
                 <View style={styles.bodyView}>
 
-                    <View style={[styles.messageView, { alignItems: "flex-end" }]}>
-                        <Text style={[styles.message, styles.sendMsg]}>Hello</Text>
-                        <Text style={styles.msgTime}>09:35 PM</Text>
-                    </View>
+                    <FlatList
+                        data={chatHistory}
+                        renderItem={( {item} ) => {
 
-                    <View style={[styles.messageView, { alignItems: "flex-start" }]}>
-                        <Text style={[styles.message, styles.receiveMsg]}>Hello</Text>
-                        <Text style={styles.msgTime}>09:35 PM</Text>
-                    </View>
+                            return (
+
+                                <View style={[styles.messageView, { alignItems: userMobile === item.sender ?  "flex-start" : "flex-end" }]}>
+                                    <Text style={[styles.message, userMobile === item.sender ? styles.receiveMsg : styles.sendMsg]}>{item.message}</Text>
+                                    <Text style={styles.msgTime}>{timeFormat(item.sent_at)}</Text>
+                                </View>
+
+
+                            );
+
+                        }}
+                    />
+
 
                 </View>
 
@@ -87,7 +142,7 @@ const styles = StyleSheet.create({
     nameTxt: {
         color: "black",
         fontWeight: '500',
-        fontSize:18
+        fontSize: 18
     },
     statusView: {
         flexDirection: "row",
