@@ -1,8 +1,10 @@
 ﻿# Chat App Practical Project
 
-This repository contains the Expo React Native frontend for the Chat App practical project created for the HDP 1 subject at Java Institute for Advanced Technology.
+This repository contains the Expo React Native frontend for the Chat App practical project, maintained by **Kavindu Kodikara**, lecturer for the **HDP 1** module at **Java Institute for Advanced Technology**.
 
-It is intended as a reference for BSc Hons Software Engineering second-year students. If you miss a class or practical coding session, you can review the daily commit history by lecture day (for example: `Day - 28`, `Day - 29`).
+## Overview
+
+It serves as a reference implementation for **BSc (Hons) Software Engineering – 2nd Year** students. If you missed a class or practical session, you can review the code by browsing the daily commit history (for example: `Day - 28`, `Day - 29`).
 
 ## About this project
 
