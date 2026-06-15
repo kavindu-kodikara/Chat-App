@@ -2,7 +2,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,17 +11,22 @@ export default function Chat() {
     const [chatHistory, setChatHistory] = useState();
     const [userName, setUserName] = useState("");
 
+    const [text, settext] = useState("");
+
+    const webSocket = useRef<WebSocket>(null); 
+
     const router = useRouter();
     const params = useLocalSearchParams();
     const chatId = params.chatId;
     const userMobile = params.userMobile;
-    
+
 
     useEffect(() => {
 
-        setUserName(params.userName+"");
+        setUserName(params.userName + "");
 
         loadChatHistory();
+        connectWebSocket();
 
     }, []);
 
@@ -44,15 +49,39 @@ export default function Chat() {
 
     }
 
-    function timeFormat(time :string){
+    function timeFormat(time: string) {
 
-        const formattedTime = new Date(time).toLocaleTimeString("en-US",{
-            hour:"numeric",
-            minute:"2-digit",
-            hour12:true,
+        const formattedTime = new Date(time).toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
         });
 
         return formattedTime;
+
+    }
+
+    function connectWebSocket() {
+
+        webSocket.current = new WebSocket("ws://192.168.8.155:3000");
+
+        console.log("Web socket starting...")
+
+        webSocket.current.onopen = () => {
+            console.log("Connected to webSocket");
+
+            if(webSocket.current){
+
+                const data = {
+                    type: "register",
+                    data: userMobile.toString()
+                };
+
+                webSocket.current.send( JSON.stringify(data) );
+
+            }
+
+        }
 
     }
 
@@ -87,11 +116,11 @@ export default function Chat() {
 
                     <FlatList
                         data={chatHistory}
-                        renderItem={( {item} ) => {
+                        renderItem={({ item }) => {
 
                             return (
 
-                                <View style={[styles.messageView, { alignItems: userMobile === item.sender ?  "flex-start" : "flex-end" }]}>
+                                <View style={[styles.messageView, { alignItems: userMobile === item.sender ? "flex-start" : "flex-end" }]}>
                                     <Text style={[styles.message, userMobile === item.sender ? styles.receiveMsg : styles.sendMsg]}>{item.message}</Text>
                                     <Text style={styles.msgTime}>{timeFormat(item.sent_at)}</Text>
                                 </View>
@@ -106,10 +135,26 @@ export default function Chat() {
                 </View>
 
                 <View style={styles.inputView}>
-                    <TextInput style={styles.input} placeholder='Enter Message' />
-                    <Pressable style={styles.sendBtn}>
+
+                    <TextInput style={styles.input} placeholder='Enter Message' onChangeText={settext}/>
+
+                    <Pressable style={styles.sendBtn} onPress={() => {
+                        
+                        if(webSocket.current){
+
+                            const data ={
+                                type:"chat",
+                                data:text,
+                            };
+
+                            webSocket.current.send( JSON.stringify(data) );
+
+                        }
+
+                    }}>
                         <FontAwesome name="send" size={24} color="white" />
                     </Pressable>
+
                 </View>
 
             </SafeAreaView>
