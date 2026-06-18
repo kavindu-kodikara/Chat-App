@@ -105,7 +105,7 @@ export default function Home() {
                             });
                         }}>
                             <Image
-                                source={{ uri: "https://cdn-icons-png.flaticon.com/512/4140/4140073.png" }}
+                                source={{ uri: item.user.img ? "http://192.168.8.155:3000"+item.user.img : "https://cdn-icons-png.flaticon.com/512/4140/4140073.png" }}
                                 style={styles.profilePic}
                             />
                             <View style={{ gap: 3 }}>

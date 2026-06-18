@@ -1,13 +1,35 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
 
     const [profileImage, setProfileImage] = useState("");
+    const [fname,setFname] = useState("");
+    const [lname,setlname] = useState("");
+    const [password,setPassword] = useState("");
+    const [mobile,setMobile] = useState("");
+
+    useEffect(()=>{
+        getUserData();
+    },[]);
+
+    async function getUserData(){
+        const userJson = await AsyncStorage.getItem("user");
+        
+        if(userJson){
+            const user = JSON.parse(userJson);
+            setFname(user.fname);
+            setlname(user.lname);
+            setPassword(user.password);
+            setMobile(user.mobile);
+        }
+
+    }
 
     async function imagePick() {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -20,6 +42,37 @@ export default function Profile() {
             setProfileImage(uri);
 
         }
+
+    }
+
+    async function update(){
+
+        const formData = new FormData();
+
+        formData.append("fname",fname);
+        formData.append("lname",lname);
+        formData.append("password",password);
+        formData.append("mobile",mobile);
+
+        formData.append("image",{
+
+            uri:profileImage,
+            name:"profile.jpg",
+            type:"image/jpeg"
+            
+        } as any );
+
+        
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+        const response = await fetch("http://192.168.8.155:3000/user/update",{
+            method:"POST",
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        console.log(data);
 
     }
 
@@ -38,26 +91,26 @@ export default function Profile() {
                     </Pressable>
 
                     <View style={styles.textView}>
-                        <Text style={styles.titleTxt}>0776655444</Text>
+                        <Text style={styles.titleTxt}>{mobile}</Text>
                     </View>
 
                     <View style={styles.inputView}>
                         <AntDesign name="user-add" size={20} color="#696969" />
-                        <TextInput style={styles.input} value='Fname' />
+                        <TextInput style={styles.input} value={fname} onChangeText={setFname}/>
                     </View>
 
                     <View style={styles.inputView}>
                         <AntDesign name="user-add" size={20} color="#696969" />
-                        <TextInput style={styles.input} value='Lname' />
+                        <TextInput style={styles.input} value={lname} onChangeText={setlname}/>
                     </View>
 
                     <View style={styles.inputView}>
                         <MaterialIcons name="lock-outline" size={22} color="#696969" />
-                        <TextInput style={styles.input} value='password' />
+                        <TextInput style={styles.input} value={password} onChangeText={setPassword}/>
                     </View>
 
                     <Pressable style={[styles.btn, { marginTop: 30 }]} onPress={() => {
-
+                        update();
                     }}>
                         <Text style={styles.btnTxt}>Update</Text>
                     </Pressable>
